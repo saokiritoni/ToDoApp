@@ -8,7 +8,7 @@ function createNewTodo () {
     // 새로운 아이템 객체 생성 
     const item = {
         id: new Date().getTime(),
-        text: '',
+        text: "",
         complete: false
     }
 
@@ -21,7 +21,10 @@ function createNewTodo () {
 
     // 리스트 요소 안에 방금 생성한 아이템 요소 추가
     list.prepend(itemEl); // prepend: itemEl을 뒤가 아니라 앞에 추가
+    
+    //disabled 속성 제거
     inputEl.removeAttribute('disabled');
+    //input 요소에 focus 
     inputEl.focus();
 }
 function createTodoElement(item){
@@ -51,6 +54,7 @@ function createTodoElement(item){
     removeBtnEl.classList.add('material-icons', 'remove-btn');
     removeBtnEl.innerHTML ='remove_circles';
 
+    // 체크박스
     checkboxEl.addEventListener('change', () => {
         item.complete = checkboxEl.checked;
         
@@ -62,6 +66,24 @@ function createTodoElement(item){
     
     })
 
+    inputEl.addEventListener('blur', () => {
+        inputEl.setAttribute('disabled', '');
+    })
+
+    editBtnEl.addEventListener('click', () => {
+        inputEl.removeAttribute('disabled');
+        inputEl.focus();
+    })
+
+    removeBtnEl.addEventListener('click', () => {
+        // 같은 것은 필터링 되고 다른 것만 새로운 배열로
+        todos = todos.filter(t => t.id !== item.id);
+        // 요소 없애기 
+        itemEl.remove();
+
+    })
+
+    // item의 텍스트 
     inputEl.addEventListener('input', () => {
         item.text = inputEl.value;
     })

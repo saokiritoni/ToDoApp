@@ -51,6 +51,21 @@ function createTodoElement(item){
     removeBtnEl.classList.add('material-icons', 'remove-btn');
     removeBtnEl.innerHTML ='remove_circles';
 
+    checkboxEl.addEventListener('change', () => {
+        item.complete = checkboxEl.checked;
+        
+        if(item.complete){
+            itemEl.classList.add('complete');
+        }else{
+            itemEl.classList.remove('complete');
+        }
+    
+    })
+
+    inputEl.addEventListener('input', () => {
+        item.text = inputEl.value;
+    })
+
     actionsEl.append(editBtnEl);
     actionsEl.append(removeBtnEl);
 

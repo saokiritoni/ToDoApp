@@ -26,13 +26,17 @@ function createNewTodo () {
     inputEl.removeAttribute('disabled');
     //input 요소에 focus 
     inputEl.focus();
+    saveToLocalStorage();
 }
+
 function createTodoElement(item){
     const itemEl = document.createElement('div');
     itemEl.classList.add('item');
 
     const checkboxEl = document.createElement('input');
     checkboxEl.type = 'checkbox';
+    // 데이터 반영
+    checkboxEl.checked = item.complete;
 
     if(item.complete){
         itemEl.classList.add('complete');
@@ -63,11 +67,13 @@ function createTodoElement(item){
         }else{
             itemEl.classList.remove('complete');
         }
+        saveToLocalStorage();
     
     })
 
     inputEl.addEventListener('blur', () => {
         inputEl.setAttribute('disabled', '');
+        saveToLocalStorage();
     })
 
     editBtnEl.addEventListener('click', () => {
@@ -80,6 +86,7 @@ function createTodoElement(item){
         todos = todos.filter(t => t.id !== item.id);
         // 요소 없애기 
         itemEl.remove();
+        saveToLocalStorage();
 
     })
 
@@ -99,3 +106,36 @@ function createTodoElement(item){
 
 
 }
+
+// Local Storage에 저장
+function saveToLocalStorage(){
+    const data = JSON.stringify(todos);
+    // 윈도우 객체 생략 가능
+    // window.localStorage.setItem('my_todos', data);
+    localStorage.setItem('my_todos', data);
+}
+
+// Local Storage에서 저장된 데이터 가져오기
+function loadFromLocalStorage(){
+    const data = localStorage.getItem('my_todos');
+    if(data){
+        // String인 object 객체로 변환 
+        todos = JSON.parse(data); 
+    }
+}
+
+function displayTodos(){
+    loadFromLocalStorage();
+
+    for(let i = 0; i < todos.length; i++){
+        const item = todos[i]; 
+        const {itemEl} = createTodoElement(item);
+
+        list.append(itemEl);
+
+    }
+}
+
+displayTodos(); // 스크립트가 시작되자마자 실행
+
+
